@@ -77,10 +77,13 @@ func aucSQN(opc, k, auts, rand []byte) ([]byte, []byte) {
 }
 
 func strictHex(s string, n int) string {
+    logger.UeauLog.Traceln("strictHex input:", s)
 	l := len(s)
 	if l < n {
+	    logger.UeauLog.Traceln("strictHex l < n:", fmt.Sprintln(strings.Repeat("0", n-l) + s))
 		return fmt.Sprintln(strings.Repeat("0", n-l) + s)
 	} else {
+	    logger.UeauLog.Traceln("strictHex else:", s[l-n : l])
 		return s[l-n : l]
 	}
 }
@@ -306,6 +309,7 @@ func GenerateAuthDataProcedure(authInfoRequest models.AuthenticationInfoRequest,
 		}
 	}
 
+    logger.UeauLog.Traceln("authSubs.SequenceNumber before strictHex", authSubs.SequenceNumber)
 	sqnStr := strictHex(authSubs.SequenceNumber, 12)
 	logger.UeauLog.Traceln("sqnStr", sqnStr)
 	sqn, err := hex.DecodeString(sqnStr)
