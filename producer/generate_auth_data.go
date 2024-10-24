@@ -432,7 +432,6 @@ func GenerateAuthDataProcedure(authInfoRequest models.AuthenticationInfoRequest,
 	}
 
 	// increment sqn
-	logger.UeauLog.Traceln("increment sqn SQNms", SQNms)
     bigSQN := big.NewInt(0)
     logger.UeauLog.Traceln("increment sqn bigSQN", bigSQN)
 	logger.UeauLog.Traceln("increment sqn sqnStr", sqnStr)
