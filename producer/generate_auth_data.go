@@ -79,7 +79,8 @@ func aucSQN(opc, k, auts, rand []byte) ([]byte, []byte) {
 func strictHex(s string, n int) string {
     logger.UeauLog.Traceln("strictHex input:", s)
 	l := len(s)
-logger.UeauLog.Traceln("strictHex input len:", l)
+    logger.UeauLog.Traceln("strictHex input len:", l)
+    logger.UeauLog.Traceln("strictHex input split:", strings.Split(s, ""))
 	if l < n {
 	    logger.UeauLog.Traceln("strictHex l < n:", fmt.Sprintln(strings.Repeat("0", n-l) + s))
 		return fmt.Sprintln(strings.Repeat("0", n-l) + s)
