@@ -80,6 +80,9 @@ func strictHex(s string, n int) string {
     logger.UeauLog.Traceln("strictHex input:", s)
 	l := len(s)
     logger.UeauLog.Traceln("strictHex input len:", l)
+    s = strings.TrimSpace(s)
+    l = len(s)
+    logger.UeauLog.Traceln("strictHex input len after trimming:", l)
     logger.UeauLog.Traceln("strictHex input split:", strings.Split(s, ""))
 	if l < n {
 	    logger.UeauLog.Traceln("strictHex l < n:", fmt.Sprintln(strings.Repeat("0", n-l) + s))
@@ -402,28 +405,19 @@ func GenerateAuthDataProcedure(authInfoRequest models.AuthenticationInfoRequest,
 			}
 
 			// increment sqn authSubs.SequenceNumber
-			logger.UeauLog.Traceln("increment sqn SQNms", SQNms)
+			logger.UeauLog.Traceln("increment sqn as part of resynch")
 			bigSQN := big.NewInt(0)
-			logger.UeauLog.Traceln("increment sqn bigSQN", bigSQN)
 			sqnStr = hex.EncodeToString(SQNms)
-			logger.UeauLog.Traceln("increment sqn sqnStr", sqnStr)
 			fmt.Printf("SQNstr %s\n", sqnStr)
 			bigSQN.SetString(sqnStr, 16)
-			logger.UeauLog.Traceln("increment sqn bigSQN set to sqnStr", bigSQN)
 
 			bigInc := big.NewInt(ind + 1)
-			logger.UeauLog.Traceln("increment sqn bigInc", bigInc)
 
 			bigP := big.NewInt(SqnMAx)
-			logger.UeauLog.Traceln("increment sqn bigP", bigP)
 			bigSQN = bigInc.Add(bigSQN, bigInc)
-			logger.UeauLog.Traceln("increment sqn bigSQN + bigInc", bigSQN)
 			bigSQN = bigSQN.Mod(bigSQN, bigP)
-			logger.UeauLog.Traceln("increment sqn bigSQN mod bigP", bigSQN)
 			sqnStr = fmt.Sprintf("%x", bigSQN)
-			logger.UeauLog.Traceln("increment sqn sqnStr after increment", sqnStr)
 			sqnStr = strictHex(sqnStr, 12)
-			logger.UeauLog.Traceln("increment sqn sqnStr after increment (hex)", sqnStr)
 		} else {
 			logger.UeauLog.Errorln("Re-Sync MAC failed ", supi)
 			logger.UeauLog.Errorln("MACS ", macS)
@@ -438,8 +432,12 @@ func GenerateAuthDataProcedure(authInfoRequest models.AuthenticationInfoRequest,
 	}
 
 	// increment sqn
-	bigSQN := big.NewInt(0)
+	logger.UeauLog.Traceln("increment sqn SQNms", SQNms)
+    bigSQN := big.NewInt(0)
+    logger.UeauLog.Traceln("increment sqn bigSQN", bigSQN)
+	logger.UeauLog.Traceln("increment sqn sqnStr", sqnStr)
 	sqn, err = hex.DecodeString(sqnStr)
+	logger.UeauLog.Traceln("increment sqn sqn", sqn)
 	if err != nil {
 		problemDetails = &models.ProblemDetails{
 			Status: http.StatusForbidden,
@@ -452,12 +450,15 @@ func GenerateAuthDataProcedure(authInfoRequest models.AuthenticationInfoRequest,
 	}
 
 	bigSQN.SetString(sqnStr, 16)
+	logger.UeauLog.Traceln("increment sqn bigSQN after setting to sqnStr", bigSQN)
 
 	bigInc := big.NewInt(1)
 	bigSQN = bigInc.Add(bigSQN, bigInc)
+	logger.UeauLog.Traceln("increment sqn bigSQN incremented", bigSQN)
 
 	SQNheStr := fmt.Sprintf("%x", bigSQN)
 	SQNheStr = strictHex(SQNheStr, 12)
+	logger.UeauLog.Traceln("increment sqn SQNheStr", SQNheStr)
 	patchItemArray := []models.PatchItem{
 		{
 			Op:    models.PatchOperation_REPLACE,
