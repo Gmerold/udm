@@ -317,6 +317,8 @@ func GenerateAuthDataProcedure(authInfoRequest models.AuthenticationInfoRequest,
     logger.UeauLog.Traceln("authSubs.SequenceNumber before strictHex", authSubs.SequenceNumber)
 	sqnStr := strictHex(authSubs.SequenceNumber, 12)
 	logger.UeauLog.Traceln("sqnStr", sqnStr)
+	logger.UeauLog.Traceln("sqnStr length", len(sqnStr))
+	logger.UeauLog.Traceln("sqnStr split", strings.Split(sqnStr, ""))
 	sqn, err := hex.DecodeString(sqnStr)
 	if err != nil {
 		problemDetails = &models.ProblemDetails{
